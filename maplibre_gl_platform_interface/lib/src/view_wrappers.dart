@@ -84,7 +84,7 @@ class TextureAndroidViewControllerWrapper
     //? instead of this
     // _controller.dispose();
     //? we do this
-    unawaited(Future.delayed(Duration(seconds: 5), _controller.dispose));
+    unawaited(Future.delayed(Duration(seconds: 10), _controller.dispose));
     return Future(() {});
   }
 
