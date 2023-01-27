@@ -310,6 +310,35 @@ class MaplibreMapController extends MapLibreGlPlatform
   }
 
   @override
+  Future<List> querySourceFeatures(
+      String sourceId, String? sourceLayerId, List<Object>? filter) async {
+    Map<String, dynamic> parameters = {};
+
+    if (sourceLayerId != null) {
+      parameters['sourceLayer'] = sourceLayerId;
+    }
+
+    if (filter != null) {
+      parameters['filter'] = filter;
+    }
+    print(parameters);
+
+    return _map
+        .querySourceFeatures(sourceId, parameters)
+        .map((feature) => {
+              'type': 'Feature',
+              'id': feature.id,
+              'geometry': {
+                'type': feature.geometry.type,
+                'coordinates': feature.geometry.coordinates,
+              },
+              'properties': feature.properties,
+              'source': feature.source,
+            })
+        .toList();
+  }
+
+  @override
   Future invalidateAmbientCache() async {
     print('Offline storage not available in web');
   }
@@ -734,8 +763,8 @@ class MaplibreMapController extends MapLibreGlPlatform
     required double east,
     required int padding,
   }) async {
-    // TODO: implement setCameraBounds
-    throw UnimplementedError();
+    _map.fitBounds(LngLatBounds(LngLat(west, south), LngLat(east, north)),
+        {'padding': padding});
   }
 
   @override
@@ -1005,5 +1034,15 @@ class MaplibreMapController extends MapLibreGlPlatform
   @override
   Future<void> setLayerVisibility(String layerId, bool visible) async {
     _map.setLayoutProperty(layerId, 'visibility', visible ? 'visible' : 'none');
+  }
+
+  @override
+  Future getFilter(String layerId) async {
+    return _map.getFilter(layerId);
+  }
+
+  @override
+  Future<List> getLayerIds() async {
+    throw UnimplementedError();
   }
 }
