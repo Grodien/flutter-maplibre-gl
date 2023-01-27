@@ -53,6 +53,8 @@ class MaplibreMap extends StatefulWidget {
       AnnotationType.line,
       AnnotationType.circle,
     ],
+    this.useDelayedDisposal,
+    this.useHybridCompositionOverride,
   })  : assert(annotationOrder.length <= 4),
         assert(annotationConsumeTapEvents.length > 0),
         super(key: key);
@@ -211,6 +213,13 @@ class MaplibreMap extends StatefulWidget {
   /// * All fade/transition animations have completed
   final OnMapIdleCallback? onMapIdle;
 
+  /// Use delayed disposal of Android View Controller to avoid flutter 3.x.x crashes
+  /// Use with caution - this is not yet production ready since several users still report crashes after using this workaround
+  final bool? useDelayedDisposal;
+
+  /// Override hybrid mode per map instance
+  final bool? useHybridCompositionOverride;
+
   /// Set `MapboxMap.useHybridComposition` to `false` in order use Virtual-Display
   /// (better for Android 9 and below but may result in errors on Android 12)
   /// or leave it `true` (default) to use Hybrid composition (Slower on Android 9 and below).
@@ -240,7 +249,9 @@ class _MaplibreMapState extends State<MaplibreMap> {
       'initialCameraPosition': widget.initialCameraPosition.toMap(),
       'options': _MapboxMapOptions.fromWidget(widget).toMap(),
       //'onAttributionClickOverride': widget.onAttributionClick != null,
-      'dragEnabled': widget.dragEnabled
+      'dragEnabled': widget.dragEnabled,
+      'useDelayedDisposal': widget.useDelayedDisposal,
+      'useHybridCompositionOverride': widget.useHybridCompositionOverride,
     };
     return _mapboxGlPlatform.buildView(
         creationParams, onPlatformViewCreated, widget.gestureRecognizers);

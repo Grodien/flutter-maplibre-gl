@@ -156,3 +156,6 @@ Please include the `NSLocationWhenInUseUsageDescription` as described [here](#lo
 
 
 [Feedback](https://github.com/m0nac0/flutter-maplibre-gl/issues) and contributions are very welcome!
+
+## Flutter 3.x.x issues and experimental workarounds
+Since Flutter 3.x.x was introduced, it exposed some race conditions resulting in occasional crashes upon map disposal. The parameter `useDelayedDisposal` was introduced as a workaround for this issue until Flutter and/or Mapbox fix this issue properly. Use with caution - this is not yet production ready since several users still report crashes after using this workaround.
